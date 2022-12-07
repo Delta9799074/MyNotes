@@ -20,8 +20,8 @@ Constraints are declarations that define the design’s goals in measurable circ
 
 Follow this flow:
 
-#### [Prepare for synthesis](https://www.notion.so/Prepare-for-synthesis-5dcdd772af3648e6a403d934b1c3003a)
+#### [Prepare for synthesis](https://github.com/Delta9799074/MyNotes/blob/master/DC/notes/Prepare%20for%20synthesis.md)
 
-#### [Specify Libraries](https://www.notion.so/Specify-Libraries-08c05ebc436041ebaea7f987a8d15169)
+#### [Specify Libraries](https://github.com/Delta9799074/MyNotes/blob/master/DC/notes/specify_libraries/Specify%20Libraries.md)
 
-#### [Read Design](https://www.notion.so/Read-Design-914f28a5c16246d4ac9af4abd6c36f66)
+#### [Read Design](https://github.com/Delta9799074/MyNotes/blob/master/DC/notes/read_design/Read%20Design.md)
