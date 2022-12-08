@@ -18,8 +18,8 @@
 
 ## 编译流程
 
-<div align=center>
-![Untitled](imgs/Untitled.png)
+<div style="text-align:center">
+<img src="imgs/Untitled.png">
 </div>
 
 顶层RTL代码：
