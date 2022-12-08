@@ -1,21 +1,58 @@
 # DC记录
 成员：郭家怡，黄静雯，周沁茗
 
-### 思路
+## 思路
 
 分块编译，解决大规模设计编译时占用内存过大的问题。
 
-1、先将sub-block编译成ddc文件。
+1、先将sub-block(4096*32bit寄存器堆)编译成ddc文件。
 
-2、预编译好的sub-block导入到Synopsys DC，顶层RTL代码使用generate例化多个sub-block。
+2、预编译好的sub-block导入到Synopsys DC，顶层RTL代码使用generate例化多个sub-sub-block。
 
 3、再次编译顶层设计。
 
-### 编译流程
+4、编译好的顶层保存为ddc文件，作为block
 
+5、重复3、4步骤，得到最终的编译结果
+
+
+## 编译流程
+<div align=center>
 ![Untitled](imgs/Untitled.png)
-
+</div>
 顶层RTL代码：
+```verilog
+module my_top_top(
+    input wire clk, 
+    input wire rst, 
+    input wire[31:0] w_data, 
+    input wire[11:0] w_addr,
+    input wire[11:0] r_addr, 
+    output wire[31:0] r_data,
+    input wire [59:0] top_csel);
+    genvar i;
+    wire [31:0] r_data_top_array[1:0];
+    wire [1:0] top_sel;
+    assign top_sel[0] = |top_csel[29:0];
+    assign top_sel[1] = |top_csel[59:30];
+    generate
+        for (i = 0; i < 2 ; i = i+1) begin
+            my_top my_top( 
+                .clk(clk), 
+                .rst(rst & top_sel[i]), 
+                .w_data(w_data & {32{top_sel[i]}}), 
+                .w_addr(w_addr & {12{top_sel[i]}}),
+                .r_addr(r_addr & {12{top_sel[i]}}), 
+                .r_data(r_data_top_array[i]),
+                .csel(top_csel[(29+i*30) : (0+i*30)])
+            );
+        end    
+    endgenerate
+    assign r_data = top_sel[0] ? r_data_top_array[0] : r_data_top_array[1];
+endmodule
+```
+
+sub-top的RTL代码：
 
 ```verilog
 module my_top(
@@ -79,8 +116,9 @@ end
     assign r_data = r_data_array[read_sel];
 endmodule
 ```
+## DC综合结果记录
 
-### 例化10个的综合结果
+### 例化10个sub-block的综合结果
 
 工艺库：TSMC 90nm，最小标准单元反相器面积0.75
 
@@ -94,12 +132,37 @@ $\frac{11889177.25}{0.75} = 15,852,236$.
 编译sub-block 2h，编译顶层模块4h。
 ![elapse_time1](imgs/pic2.png)
 
-### 例化30个的综合结果
+### 例化30个sub-block的综合结果
 
 ![area_30](imgs/area_30.png)
 门数：
+
 $\frac{36050979}{0.75} = 48,067,972$.
 
 运行时间：
 编译sub-block 2h，编译顶层模块49h20min。
 ![elapse_time2](imgs/times_30.png)
+
+## 将例化30个的ddc保存下来作为block
+### 例化两个block作为最终设计
+
+constraint script里设置最大面积1亿
+```tcl
+set_max_area 1000000000
+```
+DC编译时采用时序优先
+```
+compile_ultra -timing_high_effort_script
+```
+
+### Appendix 
+运行脚本
+```tcl
+read_ddc my_toplevel_ddc.ddc
+analyze -f verilog my_top_top.v
+elaborate my_top_top
+source scripts/test.con
+compile_ultra -timing_high_effort_script
+report_area
+write -f ddc -hierarchy -output my_top_top_ddc.ddc
+```
