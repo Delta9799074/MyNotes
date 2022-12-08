@@ -122,13 +122,15 @@ endmodule
 
 ### 例化10个sub-block的综合结果
 
-工艺库：TSMC 90nm，最小标准单元反相器面积0.75
+工艺库：TSMC 90nm，最小标准单元2输入NAND面积1.00
+```tcl
+get_attribute { technology library/2_input_nand_gate_name } area
+```
+![nand_area](imgs/nand_area.png)
 
 ![Untitled](imgs/Untitled%201.png)
 
-门数计算（0.75是单元库中最小反相器的面积）：
-
-$\frac{11889177.25}{0.75} = 15,852,236$.
+门数即面积。
 
 运行时间：
 编译sub-block 2h，编译顶层模块4h。
@@ -137,9 +139,6 @@ $\frac{11889177.25}{0.75} = 15,852,236$.
 ### 例化30个sub-block的综合结果
 
 ![area_30](imgs/area_30.png)
-门数：
-
-$\frac{36050979}{0.75} = 48,067,972$.
 
 运行时间：
 编译sub-block 2h，编译顶层模块49h20min。
@@ -156,6 +155,9 @@ DC编译时采用时序优先
 ```
 compile_ultra -timing_high_effort_script
 ```
+
+### 结果：Virtual Memory 不够
+![](imgs/area_60.png)
 
 ### Appendix 
 运行脚本
