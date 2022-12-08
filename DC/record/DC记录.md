@@ -91,5 +91,15 @@ endmodule
 $\frac{11889177.25}{0.75} = 15,852,236$.
 
 运行时间：
-编译sub-block2h，编译顶层模块4h。
-![elapse_time](imgs/pic2.png)
+编译sub-block 2h，编译顶层模块4h。
+![elapse_time1](imgs/pic2.png)
+
+### 例化30个的综合结果
+
+![area_30](imgs/area_30.png)
+门数：
+$\frac{36050979}{0.75} = 48,067,972$.
+
+运行时间：
+编译sub-block 2h，编译顶层模块49h20min。
+![elapse_time2](imgs/times_30.png)
