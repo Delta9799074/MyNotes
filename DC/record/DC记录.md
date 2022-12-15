@@ -159,6 +159,14 @@ compile_ultra -timing_high_effort_script
 ### 结果：Virtual Memory 不够
 ![](imgs/area_60.png)
 
+## 将例化10个的ddc保存下来作为block
+### 例化4个block作为最终设计（5个virtual memory不够）
+### 运行结果
+48,449,247门
+![](imgs/area_40.png)
+### 运行时间
+![](imgs/times_40.png)
+
 ### Appendix 
 运行脚本
 ```tcl
